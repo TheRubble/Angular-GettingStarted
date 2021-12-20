@@ -11,6 +11,8 @@ export class ProductListComponent  implements OnInit{
   imageWidth = 50;
   imageMargin = 2;
   showImage = true;
+
+  filterProducts : IProduct[] = [];
   products : IProduct[] =
     [
       {
@@ -64,13 +66,29 @@ export class ProductListComponent  implements OnInit{
         "imageUrl": "assets/images/xbox-controller.png"
       }
     ]
-  listFilter: string = "cart";
+
+  private  _listFilter = "";
+
+
+  get listFilter() : string {
+    return this._listFilter;
+  }
+
+  set listFilter(value : string){
+    this._listFilter = value;
+    this.filterProducts = this.performFilter(value);
+  }
 
   toggleImage() {
     this.showImage = !this.showImage;
   }
 
   ngOnInit(): void {
-    console.log("hello world")
+    this.listFilter = "cart";
+  }
+
+  private performFilter(value: string) : IProduct[] {
+    let filterBy = value.toLocaleLowerCase();
+    return this.products.filter(x => x.productName.toLocaleLowerCase().includes(filterBy));
   }
 }
